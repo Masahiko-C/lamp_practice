@@ -32,6 +32,8 @@ if(is_valid_csrf_token($token)) {
   }else {
     set_error('不正なリクエストです。');
   }
+} else {
+  set_error('不正な操作が行われました。');
 }
 
 

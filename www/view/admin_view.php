@@ -44,7 +44,6 @@
         </select>
       </div>
       <input type="hidden" name="token" value="<?php print($token); ?>">
-      
       <input type="submit" value="商品追加" class="btn btn-primary">
     </form>
 
@@ -95,6 +94,7 @@
               <form method="post" action="admin_delete_item.php">
                 <input type="submit" value="削除" class="btn btn-danger delete">
                 <input type="hidden" name="item_id" value="<?php print($item['item_id']); ?>">
+                <input type="hidden" name="token" value="<?php print($token); ?>">
               </form>
 
             </td>
