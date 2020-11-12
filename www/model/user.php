@@ -5,7 +5,7 @@ require_once MODEL_PATH . 'db.php';
 function get_user($db, $user_id){
   $sql = "
     SELECT
-      user_id, 
+      user_id,
       name,
       password,
       type
@@ -29,11 +29,11 @@ function get_user_by_name($db, $name){
     FROM
       users
     WHERE
-      name = '?'
+      name = ?
     LIMIT 1
   ";
 
-  return fetch_query($db, $sql, $name);
+  return fetch_query($db, $sql, [$name]);
 }
 
 function login_as($db, $name, $password){
@@ -104,7 +104,7 @@ function insert_user($db, $name, $password){
   $sql = "
     INSERT INTO
       users(name, password)
-    VALUES ('?', '?');
+    VALUES (?, ?);
   ";
 
   return execute_query($db, $sql, [$name, $password]);

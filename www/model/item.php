@@ -25,7 +25,7 @@ function get_item($db, $item_id){
 function get_items($db, $is_open = false){
   $sql = '
     SELECT
-      item_id, 
+      item_id,
       name,
       stock,
       price,
