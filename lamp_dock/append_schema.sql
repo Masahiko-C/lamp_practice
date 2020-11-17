@@ -13,8 +13,9 @@ CREATE TABLE `purchases` (
 --テーブル構造 `purchase detailsP¥`
 --
 
-CREATE TABLE `purchase details` (
+CREATE TABLE `purchase_details` (
     `order_number` int(11),
     `item_id` int(11),
+    `price` int(11),
     `quantity` int(11)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
