@@ -1,4 +1,4 @@
---テーブル構造の構造 `purchase history`
+--テーブル構造の構造 `purchase`
 --
 
 CREATE TABLE `purchases` (
@@ -11,7 +11,7 @@ CREATE TABLE `purchases` (
 -- -----------------------------------------------------------
 
 --
---テーブル構造 `purchase detailsP¥`
+--テーブル構造 `purchase details`
 --
 
 CREATE TABLE `purchase_details` (
