@@ -62,7 +62,7 @@ function add_cart($db, $user_id, $item_id ) {
   return update_cart_amount($db, $cart['cart_id'], $cart['amount'] + 1);
 }
 
-function insert_cart($db, $item_id, $user_id, $amount = 1){
+function insert_cart($db, $user_id, $item_id, $amount = 1){
   $sql = "
     INSERT INTO
       carts(
@@ -105,6 +105,8 @@ function purchase_carts($db, $carts){
   if(validate_cart_purchase($carts) === false){
     return false;
   }
+  $db -> beginTransaction();
+
   foreach($carts as $cart){
     if(update_item_stock(
         $db, 
@@ -114,8 +116,56 @@ function purchase_carts($db, $carts){
       set_error($cart['name'] . 'の購入に失敗しました。');
     }
   }
-  
+
+  create_purchases($db, $carts);
+
   delete_user_carts($db, $carts[0]['user_id']);
+
+  if (has_error()) {
+    $db -> rollback();
+  } else {
+    $db -> commit();
+  }
+}
+
+function create_purchases($db, $carts) {
+  if (insert_purchases($db, $carts[0]['user_id']) === false) {
+    set_error('購入履歴の追加に失敗しました。');
+    return false;
+  }
+  foreach ($carts as $cart) {
+    if (insert_purchase_details($db, $cart) === false){
+      set_error($cart['name'] . 'の明細追加に失敗しました。');
+      return false;
+    }
+  }
+  return true;
+}
+
+function insert_purchases($db, $user_id) {
+  $sql = "
+  INSERT INTO
+    purchases(
+      user_id
+    )
+  VALUES (?);
+  ";
+
+  return execute_query($db, $sql, [$user_id]);
+}
+
+function insert_purchase_details($db, $cart){
+  $sql = "
+  INSERT INTO
+    purchase_details(
+      order_number,
+      item_id,
+      price,
+      quantity
+    )
+  VALUES (LAST_INSERT_ID(),?,?,?);
+  ";
+  return execute_query($db, $sql, [$cart['item_id'], $cart['price'], $cart['amount']]);
 }
 
 function delete_user_carts($db, $user_id){
@@ -156,4 +206,5 @@ function validate_cart_purchase($carts){
   }
   return true;
 }
+
 
