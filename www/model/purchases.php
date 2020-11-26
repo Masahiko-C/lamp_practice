@@ -42,7 +42,8 @@ function get_purchases($db, $user_id){
     return fetch_all_query($db, $sql, [$user_id]);
   }
 
-function get_purchases_by_number($db, $order_number){
+function get_purchases_by_number($db, $order_number, $user_id = null){
+    $params = [$order_number];
     $sql = "
         SELECT
             purchases.order_number,
@@ -55,14 +56,21 @@ function get_purchases_by_number($db, $order_number){
         ON
             purchases.order_number = purchase_details.order_number
         WHERE
-            purchases.order_number = ?
-        GROUP BY
+            purchases.order_number = ?";
+    if ($user_id !== null) {
+        $sql .= "
+            AND user_id = ?";
+        $params[] = $user_id;
+    }
+        $sql .= "
+            GROUP BY
             order_number;
         ";
-    return fetch_query($db, $sql, [$order_number]);
+    return fetch_query($db, $sql, $params);
 }
 
-function get_purchase_details($db, $order_number){
+function get_purchase_details($db, $order_number, $user_id = null){
+    $params = [$order_number];
     $sql = "
         SELECT
             items.name,
@@ -77,5 +85,11 @@ function get_purchase_details($db, $order_number){
         WHERE
             order_number = ?
         ";
-    return fetch_all_query($db, $sql, [$order_number]);
+    if ($user_id !== null) {
+        $sql .= "
+            AND EXISTS(SELECT * FROM purchases WHERE order_number = ? AND user_id = ?)";
+        $params[] = $order_number;
+        $params[] = $user_id;
+    }
+    return fetch_all_query($db, $sql, $params);
 }

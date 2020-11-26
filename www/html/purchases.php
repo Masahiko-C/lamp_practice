@@ -20,6 +20,4 @@ if($user['type'] === USER_TYPE_ADMIN){
   $purchases = get_purchases($db, $user['user_id']);
 }
 
-$token = get_csrf_token();
-
 include_once VIEW_PATH . 'purchases_view.php';
