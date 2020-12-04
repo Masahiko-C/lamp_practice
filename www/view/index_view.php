@@ -9,9 +9,17 @@
 <body>
   <?php include VIEW_PATH . 'templates/header_logined.php'; ?>
   
-
   <div class="container">
     <h1>商品一覧</h1>
+    <form method="get">
+      <select name="sort" id="sort">
+        <option value="new_arrive" selected>新着順</option>
+        <option value="high_price">価格が高い順</option>
+        <option value="low_price">価格が安い順</option>
+      </select>
+      <input type="submit" value="変更する">
+    </form>
+
     <?php include VIEW_PATH . 'templates/messages.php'; ?>
 
     <div class="card-deck">
@@ -43,6 +51,5 @@
       </div>
     </div>
   </div>
-  
 </body>
 </html>
