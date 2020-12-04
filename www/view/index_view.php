@@ -50,6 +50,14 @@
       <?php } ?>
       </div>
     </div>
+    <div>
+        <h3>人気ランキング</h3>
+        <ol>
+        <?php foreach($ranks as $rank) { ?>
+          <li><?php print $rank['name']; ?></li>
+        <?php } ?>
+        </ol>
+      </div>
   </div>
 </body>
 </html>

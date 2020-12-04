@@ -4,6 +4,23 @@ require_once MODEL_PATH . 'db.php';
 
 // DB利用
 
+function get_ranking($db){
+  $sql = "
+    SELECT 
+      purchase_details.item_id,
+      count(quantity),
+      items.name
+    FROM purchase_details
+      INNER JOIN items
+      ON purchase_details.item_id = items.item_id
+      WHERE items.status = 1
+    GROUP BY purchase_details.item_id
+    ORDER BY count(quantity) DESC
+    LIMIT 3;";
+    
+    return fetch_all_query($db, $sql);
+}
+
 function get_item($db, $item_id){
   $sql = "
     SELECT
