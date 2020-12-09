@@ -4,6 +4,24 @@ require_once MODEL_PATH . 'db.php';
 
 // DB利用
 
+function get_max_page($items) {
+  $items_num = count($items);
+  return ceil($items_num / PAGE_MAX);
+}
+
+function get_page_id(){
+  if(!get_get('page_id')){
+     return 1;
+  } else {
+    return get_get('page_id');
+  }
+}
+
+function get_disp_data($items, $now_page) {
+  $start_no = ($now_page - 1) * PAGE_MAX;
+  return array_slice($items, $start_no, PAGE_MAX, true);
+}
+
 function get_ranking($db){
   $sql = "
     SELECT 
