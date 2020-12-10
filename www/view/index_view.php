@@ -16,7 +16,7 @@
     <div class="text-right">
     <form method="get">
       <select name="sort" id="sort">
-        <option value="new_arrive" selected>新着順</option>
+        <option value="new_arrive">新着順</option>
         <option value="high_price">価格が高い順</option>
         <option value="low_price">価格が安い順</option>
       </select>
@@ -33,7 +33,8 @@
         datatype: "HTML",
         success : function(data, dataType) {
         //HTMLファイル内の該当箇所にレスポンスデータを追加する場合
-        document.write(data);
+        var doc = new DOMParser().parseFromString(data, "text/html");
+        $("body").html($(doc).find("body").html());;
         },
         //処理がエラーであれば
         error : function() {
