@@ -4,6 +4,41 @@ require_once MODEL_PATH . 'db.php';
 
 // DB利用
 
+function get_max_page($items) {
+  $items_num = count($items);
+  return ceil($items_num / PAGE_MAX);
+}
+
+function get_page_id(){
+  if(!get_get('page_id')){
+     return 1;
+  } else {
+    return get_get('page_id');
+  }
+}
+
+function get_disp_data($items, $now_page) {
+  $start_no = ($now_page - 1) * PAGE_MAX;
+  return array_slice($items, $start_no, PAGE_MAX, true);
+}
+
+function get_ranking($db){
+  $sql = "
+    SELECT 
+      purchase_details.item_id,
+      count(quantity),
+      items.name
+    FROM purchase_details
+      INNER JOIN items
+      ON purchase_details.item_id = items.item_id
+      WHERE items.status = 1
+    GROUP BY purchase_details.item_id
+    ORDER BY count(quantity) DESC
+    LIMIT 3;";
+    
+    return fetch_all_query($db, $sql);
+}
+
 function get_item($db, $item_id){
   $sql = "
     SELECT
@@ -22,7 +57,7 @@ function get_item($db, $item_id){
   return fetch_query($db, $sql, [$item_id]);
 }
 
-function get_items($db, $is_open = false){
+function get_items($db, $is_open = false, $sort = null){
   $sql = '
     SELECT
       item_id,
@@ -39,7 +74,16 @@ function get_items($db, $is_open = false){
       WHERE status = 1
     ';
   }
-
+  if($sort === 'high_price'){
+    $sql .= '
+      ORDER BY price DESC';
+  } else if($sort === 'low_price'){
+    $sql .= '
+      ORDER BY price ASC';
+  } else {
+    $sql .= '
+      ORDER BY created DESC';
+  }
   return fetch_all_query($db, $sql);
 }
 
@@ -47,8 +91,8 @@ function get_all_items($db){
   return get_items($db);
 }
 
-function get_open_items($db){
-  return get_items($db, true);
+function get_open_items($db, $sort = null){
+  return get_items($db, true, $sort);
 }
 
 function regist_item($db, $name, $price, $stock, $status, $image){
