@@ -17,8 +17,8 @@
     <form method="get">
       <select name="sort" id="sort">
         <option value="new_arrive">新着順</option>
-        <option value="high_price">価格が高い順</option>
-        <option value="low_price">価格が安い順</option>
+        <option <?php print ($sort === 'high_price' ? 'selected' : ''); ?> value="high_price">価格が高い順</option>
+        <option <?php print ($sort === 'low_price' ? 'selected' : ''); ?> value="low_price">価格が安い順</option>
       </select>
       <input type="hidden" name="page_id" value="1">
     </form>
